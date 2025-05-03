@@ -1,7 +1,10 @@
 const WebSocket = require("ws");
 
 // Create WebSocket server
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({
+  port: process.env.PORT || 10000,
+  path: "/ws",
+});
 
 const nodeMcus = new Set();
 const unrealEngines = new Set();
@@ -32,7 +35,7 @@ wss.on("connection", function connection(ws, req) {
       if (unrealEngines.has(ws)) {
         console.log("Forwarding to NodeMCUs...");
         nodeMcus.forEach((client) => {
-          console.log(client.readyState,WebSocket.OPEN);
+          console.log(client.readyState, WebSocket.OPEN);
 
           if (client.readyState === WebSocket.OPEN) {
             console.log(message.toString());
@@ -50,4 +53,4 @@ wss.on("connection", function connection(ws, req) {
   });
 });
 
-console.log("WebSocket server running on ws://localhost:8080");
+console.log("WebSocket server running on",process.env.PORT || 10000);
